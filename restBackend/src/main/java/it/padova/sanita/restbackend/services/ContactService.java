@@ -19,18 +19,18 @@ import com.google.gson.Gson;
 @Path("/rest")
 public class ContactService
 {
+	private Gson gson = new Gson();
+	private ContactDAO contactDAO = new ContactDAO();
+	
 	@GET
 	@Path("contact/{id}")
 	@Produces("application/json")
 	public Response getContact(@PathParam("id") Long id)
 	{
-		ContactDAO contactDAO = new ContactDAO();
-
 		try
 		{
 			//Get specific values
 			Contact _contact = contactDAO.findById(id);
-			Gson gson = new Gson();
 
 			if(_contact != null) {
 				return Response.status(200).entity(gson.toJson(_contact)).build(); 
@@ -44,6 +44,7 @@ public class ContactService
 			e.printStackTrace();
 			return Response.status(500).entity("ERROR").build();
 		}
+
 	}
 
 	@GET
@@ -51,12 +52,10 @@ public class ContactService
 	@Produces("application/json")
 	public Response getContacts()
 	{
-		ContactDAO contactDAO = new ContactDAO();
 		try
 		{
 			//Get specific values
 			List<Contact> _contacts = contactDAO.findAll();
-			Gson gson = new Gson();
 
 			if(_contacts != null) {
 				return Response.status(200).entity(gson.toJson(_contacts)).build(); 
@@ -73,10 +72,8 @@ public class ContactService
 
 	@POST
 	@Path("/contact")
-	public Response createOrUpdateContact(String c) {
-		Gson gson = new Gson();
-		Contact contact = gson.fromJson(c, Contact.class);
-		ContactDAO contactDAO = new ContactDAO();
+	public Response createOrUpdateContact(String payload) {
+		Contact contact = gson.fromJson(payload, Contact.class);
 		try {
 			contact = contactDAO.saveOrUpdate(contact);
 			return Response.status(200).entity(null).build();
@@ -88,13 +85,12 @@ public class ContactService
 	
 	@POST
 	@Path("/contactStoredPro")
-	public Response createOrUpdateViaStoredPro(String c) {
-		Gson gson = new Gson();
-		Contact contact = gson.fromJson(c, Contact.class);
-		ContactDAO contactDAO = new ContactDAO();
+	public Response createOrUpdateViaStoredPro(String payload) {
+		Contact contact = gson.fromJson(payload, Contact.class);
+		
 		try {
-			contactDAO.saveOrUpdateViaStoredPro(contact);
-			return Response.status(200).entity(null).build();
+			String ret = contactDAO.saveOrUpdateViaStoredPro(contact);
+			return Response.status(200).entity(ret).build();
 
 		} catch (Exception e) {
 			return Response.status(500).entity(null).build();
@@ -105,13 +101,10 @@ public class ContactService
 	@Path("contact/{id}")
 	public Response deleteContact(@PathParam("id") Long id)
 	{
-		ContactDAO contactDAO = new ContactDAO();
-
 		try
 		{
 			//Get specific values
 			Contact _contact = contactDAO.findById(id);
-			Gson gson = new Gson();
 
 			if(_contact != null) {
 				contactDAO.delete(_contact);

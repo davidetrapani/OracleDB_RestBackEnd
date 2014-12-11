@@ -1,9 +1,9 @@
 package it.padova.sanita.restbackend.dao;
 
 import it.padova.sanita.restbackend.model.Contact;
+import it.padova.sanita.restbackend.model.Demo;
 
 import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ import oracle.jdbc.internal.OracleTypes;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.internal.SessionFactoryImpl;
+
+import com.google.gson.Gson;
 
 @Transactional()
 public class ContactDAO extends GenericHibernateDao<Contact, Long> {
@@ -43,38 +43,42 @@ public class ContactDAO extends GenericHibernateDao<Contact, Long> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void saveOrUpdateViaStoredPro(Contact contact) throws Exception
+	public String saveOrUpdateViaStoredPro(Contact contact) throws Exception
 	{
+		//http://stackoverflow.com/questions/13015749/getting-a-result-back-from-a-stored-procedure-in-java
+		String ret = "";
 		CallableStatement callableStatement = null;
 		try{
-			callableStatement = getConnection().prepareCall("call INSERTCONTACT(?,?,?,?)");
+			callableStatement = getConnection().prepareCall("call INSERTCONTACTRETURNCURSOR(?,?,?,?)");
 			callableStatement.setString(1,contact.getEmail());
 			callableStatement.setString(2,contact.getName());
 			callableStatement.setString(3, contact.getPhoneNumber());
-			//callableStatement.registerOutParameter(4, OracleTypes.CURSOR);
-			callableStatement.registerOutParameter(4, java.sql.Types.VARCHAR);
 
+			//callableStatement.registerOutParameter(4, java.sql.Types.VARCHAR);
+
+			callableStatement.registerOutParameter(4, OracleTypes.CURSOR);
 			callableStatement.execute();
-			String result = callableStatement.getString(4);
-			System.out.println(result);
-			//ResultSet resultSet=(ResultSet) callableStatement.getObject(1);
+
+			//String result = callableStatement.getString(4);
+			//System.out.println(result);
+
+			ResultSet rs = (ResultSet)callableStatement.getObject(4);
+			ArrayList<Demo> array = new ArrayList<Demo>();
+			while(rs.next()){
+				Demo demo = new Demo();
+				demo.setAnno(rs.getString("ANNO"));
+				demo.setMese(rs.getString("MESE"));
+				demo.setGiorno(rs.getString("GIORNO"));
+				array.add(demo);
+			}
+			rs.close();
+			Gson gson = new Gson();
+			ret = gson.toJson(array);
 
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-	}
-
-	private Connection getConnection(){
-		Session session = getSession();
-		Connection connection = null;
-		SessionFactoryImpl sessionFactory = (SessionFactoryImpl) session.getSessionFactory();
-		try{
-			connection = sessionFactory.getConnectionProvider().getConnection();
-		}
-		catch (HibernateException | SQLException e)
-		{
-			e.printStackTrace();
-		}
-		return connection;
+		
+		return ret;
 	}
 }

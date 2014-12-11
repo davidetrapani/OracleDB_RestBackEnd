@@ -14,57 +14,68 @@ import javax.persistence.Table;
 @SequenceGenerator(name="IdContactSequenceGen",sequenceName="SEQ_CONTACT_ID",allocationSize=1,initialValue=1)
 public class Contact
 {
-  private Long id;
-  
-  private String email;
-  
-  private String name;
-  
-  private String phoneNumber;
+	private Long id;
 
-  @Id
-  @Column(name="ID", unique = true, nullable = false)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IdContactSequenceGen")
-  public Long getId()
-  {
-    return id;
-  }
+	private String email;
 
-  public void setId(Long id)
-  {
-    this.id = id;
-  }
-  
-  @Column(name="EMAIL", nullable = false, length = 100)
-  public String getEmail()
-  {
-    return email;
-  }
-  
-  public void setEmail(String email)
-  {
-    this.email = email;
-  }
+	private String name;
 
-  @Column(name="NAME", nullable = false, length = 255)
-  public String getName()
-  {
-    return name;
-  }
+	private String phoneNumber;
 
-  public void setName(String name)
-  {
-    this.name = name;
-  }
+	private String newField;
 
-  @Column(name="PHONENUMBER", nullable = true, length = 2000)
-  public String getPhoneNumber()
-  {
-    return phoneNumber;
-  }
+	@Column(name="NEWFIELD", nullable = true, length = 2000)
+	public String getNewField() {
+		return newField;
+	}
 
-  public void setPhoneNumber(String phoneNumber)
-  {
-    this.phoneNumber = phoneNumber;
-  }
+	public void setNewField(String newField) {
+		this.newField = newField;
+	}
+
+	@Id
+	@Column(name="ID_CONTACT", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "IdContactSequenceGen")
+	public Long getId()
+	{
+		return id;
+	}
+
+	public void setId(Long id)
+	{
+		this.id = id;
+	}
+
+	@Column(name="EMAIL", nullable = false, length = 100)
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
+	}
+
+	@Column(name="NAME", nullable = false, length = 255)
+	public String getName()
+	{
+		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	@Column(name="PHONENUMBER", nullable = true, length = 2000)
+	public String getPhoneNumber()
+	{
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber)
+	{
+		this.phoneNumber = phoneNumber;
+	}
 }
