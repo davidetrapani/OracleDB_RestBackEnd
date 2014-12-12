@@ -1,5 +1,5 @@
 ## Intro
-
+a simple yet effective boilerplate project for a REST backend with Jersey, GSON, Hibernate using Oracle DB as persistence layer
 
 ## Usage
 Download the Oracle ojdbc6.jar from <a href="http://www.oracle.com/technetwork/database/features/jdbc/index-091264.html">this link</a>
