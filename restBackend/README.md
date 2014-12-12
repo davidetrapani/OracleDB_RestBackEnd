@@ -10,12 +10,7 @@ mvn install:install-file -Dfile={Path/to/your/ojdbc.jar} -DgroupId=com.oracle
 -DartifactId=ojdbc6 -Dversion=11.2.0 -Dpackaging=jar
 ```
 
-Make a new directory, and `cd` into it
+Then, and `cd` to your project and 
 ```
-mkdir my-ionic-project && cd $_
-```
-
-Run `yo ionic`, optionally passing an app name:
-```
-yo ionic [app-name]
+mvn clean && mvn install
 ```
