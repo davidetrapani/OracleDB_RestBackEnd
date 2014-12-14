@@ -1,5 +1,6 @@
 package it.padova.sanita.restbackend.dto;
 
+import it.padova.sanita.restbackend.model.Demo;
 
 public class ContactDTO
 {

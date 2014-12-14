@@ -74,7 +74,7 @@ public class ContactDAO extends GenericHibernateDao<Contact, Long> {
 			rs.close();
 			Gson gson = new Gson();
 			ret = gson.toJson(array);
-
+			
 		}catch(SQLException e){
 			e.printStackTrace();
 		}

@@ -13,7 +13,7 @@ public class ResponseCorsFilter implements ContainerResponseFilter {
 		//http://blog.usul.org/cors-compliant-rest-api-with-jersey-and-containerresponsefilter/
 		ResponseBuilder resp = Response.fromResponse(contResp.getResponse());
 		resp.header("Access-Control-Allow-Origin", "*")
-		.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+		.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE");
 		String reqHead = req.getHeaderValue("Access-Control-Request-Headers");
 
 		if(null != reqHead && !reqHead.equals("")){

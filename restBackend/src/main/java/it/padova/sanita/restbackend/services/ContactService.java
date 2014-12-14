@@ -15,13 +15,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 @Path("/rest")
 public class ContactService
 {
 	private Gson gson = new Gson();
 	private ContactDAO contactDAO = new ContactDAO();
-	
+
 	@GET
 	@Path("contact/{id}")
 	@Produces("application/json")
@@ -70,7 +71,7 @@ public class ContactService
 		}
 	}
 
-	@POST
+	/*@POST
 	@Path("/contact")
 	public Response createOrUpdateContact(String payload) {
 		Contact contact = gson.fromJson(payload, Contact.class);
@@ -81,13 +82,30 @@ public class ContactService
 		} catch (Exception e) {
 			return Response.status(500).entity(null).build();
 		}
+	}*/
+
+	@POST
+	@Path("/contact")
+	public Response createOrUpdateContacts(String payload) {
+		List<Contact> contactList = gson.fromJson(payload,  new TypeToken<List<Contact>>(){}.getType());
+		try {
+			for (Contact contact : contactList){
+				contact = contactDAO.saveOrUpdate(contact);
+			}
+			return Response.status(200).entity(null).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(500).entity(null).build();
+		}
+
 	}
-	
+
 	@POST
 	@Path("/contactStoredPro")
 	public Response createOrUpdateViaStoredPro(String payload) {
 		Contact contact = gson.fromJson(payload, Contact.class);
-		
+
 		try {
 			String ret = contactDAO.saveOrUpdateViaStoredPro(contact);
 			return Response.status(200).entity(ret).build();
@@ -96,7 +114,7 @@ public class ContactService
 			return Response.status(500).entity(null).build();
 		}
 	}
-	
+
 	@DELETE
 	@Path("contact/{id}")
 	public Response deleteContact(@PathParam("id") Long id)

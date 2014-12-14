@@ -124,7 +124,7 @@ public abstract class GenericHibernateDao<T, ID extends Serializable>
 		try
 		{
 			Session session = getSession();
-			session.saveOrUpdate(entity);
+			session.merge(entity);
 			flush(session);
 			return entity;
 		}
